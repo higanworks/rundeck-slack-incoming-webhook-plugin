@@ -54,8 +54,6 @@ public class SlackNotificationPlugin implements NotificationPlugin {
     private static final String SLACK_MESSAGE_COLOR_YELLOW = "warning";
     private static final String SLACK_MESSAGE_COLOR_RED = "danger";
 
-    private static final String SLACK_MESSAGE_FROM_NAME = "Rundeck";
-//    private static final String SLACK_EXT_MESSAGE_TEMPLATE_PATH = "/var/lib/rundeck/libext/templates";
     private static final String SLACK_MESSAGE_TEMPLATE_SUCCESS = "slack-template-success.ftl";
     private static final String SLACK_MESSAGE_TEMPLATE_FAILED = "slack-template-error.ftl";
     private static final String SLACK_MESSAGE_TEMPLATE_STARTED = "slack-template-started.ftl";
@@ -83,26 +81,10 @@ public class SlackNotificationPlugin implements NotificationPlugin {
     public boolean postNotification(String trigger, Map executionData, Map config) {
 
         String ACTUAL_SLACK_TEMPLATE;
-
-//        if(null != external_template && !external_template.isEmpty()) {
-//            try {
-//                FileTemplateLoader externalTemplate = new FileTemplateLoader(new File(SLACK_EXT_MESSAGE_TEMPLATE_PATH));
-//                System.err.printf("Found external template directory. Using it.\n");
-//                TemplateLoader[] loaders = new TemplateLoader[]{externalTemplate};
-//                MultiTemplateLoader mtl = new MultiTemplateLoader(loaders);
-//                FREEMARKER_CFG.setTemplateLoader(mtl);
-//                ACTUAL_SLACK_TEMPLATE = external_template;
-//            } catch (Exception e) {
-//                System.err.printf("No such directory: %s\n", SLACK_EXT_MESSAGE_TEMPLATE_PATH);
-//                return false;
-//            }
-//        }else{
-            ClassTemplateLoader builtInTemplate = new ClassTemplateLoader(SlackNotificationPlugin.class, "/templates");
-            TemplateLoader[] loaders = new TemplateLoader[]{builtInTemplate};
-            MultiTemplateLoader mtl = new MultiTemplateLoader(loaders);
-            FREEMARKER_CFG.setTemplateLoader(mtl);
-            //ACTUAL_SLACK_TEMPLATE = SLACK_MESSAGE_TEMPLATE;
-//        }
+        ClassTemplateLoader builtInTemplate = new ClassTemplateLoader(SlackNotificationPlugin.class, "/templates");
+        TemplateLoader[] loaders = new TemplateLoader[]{builtInTemplate};
+        MultiTemplateLoader mtl = new MultiTemplateLoader(loaders);
+        FREEMARKER_CFG.setTemplateLoader(mtl);
 
         TRIGGER_NOTIFICATION_DATA.put(TRIGGER_START,   new SlackNotificationData(SLACK_MESSAGE_TEMPLATE_STARTED, SLACK_MESSAGE_COLOR_YELLOW));
         TRIGGER_NOTIFICATION_DATA.put(TRIGGER_SUCCESS, new SlackNotificationData(SLACK_MESSAGE_TEMPLATE_SUCCESS, SLACK_MESSAGE_COLOR_GREEN));
@@ -141,13 +123,6 @@ public class SlackNotificationPlugin implements NotificationPlugin {
         model.put("color", color);
         model.put("executionData", executionData);
         model.put("config", config);
-//         model.put("channel", channel);
-//        if(username != null && !username.isEmpty()) {
-//            model.put("username", username);
-//        }
-//        if(icon_url != null && !icon_url.isEmpty()) {
-//            model.put("icon_url", icon_url);
-//        }
         StringWriter sw = new StringWriter();
         try {
             Template template = FREEMARKER_CFG.getTemplate(templateName);
@@ -160,8 +135,6 @@ public class SlackNotificationPlugin implements NotificationPlugin {
         }
 
         return sw.toString();
-//        String mm = "{\"text\": \"This is posted from rundeck\"}";
-//        return urlEncode(mm);
     }
 
     private String urlEncode(String s) {
@@ -213,7 +186,6 @@ public class SlackNotificationPlugin implements NotificationPlugin {
     private void putRequestStream(HttpURLConnection connection, String message) {
         try {
             connection.setRequestMethod("POST");
-//            connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("charset", "utf-8");
 
             connection.setDoInput(true);
