@@ -6,7 +6,7 @@ Sends rundeck notification messages to a slack channel.  This plugin  is based o
 Installation Instructions
 -------------------------
 
-See the [Included Plugins | Rundeck Documentation](http://rundeck.org/docs/plugins-user-guide/installing.html#included-plugins "Included Plugins") for more information on installing rundeck plugins.
+See the [Installing Plugins | Rundeck Documentation](https://docs.rundeck.com/docs/administration/configuration/plugins/installing.html) for more information on installing rundeck plugins.
 
 ## Download jarfile
 
